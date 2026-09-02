@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inscripción · Instructorado EIB</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -319,25 +320,26 @@
 
           <div class="field">
             <fieldset>
-              <label>¿Qué curso harás? <span class="req">*</span></label>
+              <label>¿Qué certificación/instructorado harás? <span class="req">*</span></label>
               <div class="course-options">
                 <label class="course-option">
-                  <input type="radio" name="curso" value="Ritmos latinos aplicados al baile fitness" required>
+                  <input type="checkbox" name="curso" value="Ritmos latinos aplicados al baile fitness">
                   <span>Ritmos latinos aplicados al baile fitness</span>
                 </label>
                 <label class="course-option">
-                  <input type="radio" name="curso" value="Latin step" required>
+                  <input type="checkbox" name="curso" value="Latin step">
                   <span>Latin step</span>
                 </label>
                 <label class="course-option">
-                  <input type="radio" name="curso" value="Baile fitness con elementos" required>
+                  <input type="checkbox" name="curso" value="Baile fitness con elementos">
                   <span>Baile fitness con elementos</span>
                 </label>
                 <label class="course-option">
-                  <input type="radio" name="curso" value="Baile y movimiento para adultos mayores" required>
+                  <input type="checkbox" name="curso" value="Baile y movimiento para adultos mayores">
                   <span>Baile y movimiento para adultos mayores</span>
                 </label>
               </div>
+              <div class="hint">Podés elegir más de una opción.</div>
             </fieldset>
           </div>
 
@@ -352,7 +354,11 @@
               <select name="whatsapp_pais" required>
                 <option value="">País</option>
                 <option value="+54 Argentina">Argentina +54</option>
+                <option value="+61 Australia">Australia +61</option>
+                <option value="+43 Austria">Austria +43</option>
+                <option value="+32 Bélgica">Bélgica +32</option>
                 <option value="+591 Bolivia">Bolivia +591</option>
+                <option value="+55 Brasil">Brasil +55</option>
                 <option value="+56 Chile">Chile +56</option>
                 <option value="+57 Colombia">Colombia +57</option>
                 <option value="+506 Costa Rica">Costa Rica +506</option>
@@ -360,8 +366,13 @@
                 <option value="+503 El Salvador">El Salvador +503</option>
                 <option value="+34 España">España +34</option>
                 <option value="+1 Estados Unidos">Estados Unidos +1</option>
+                <option value="+33 Francia">Francia +33</option>
+                <option value="+49 Alemania">Alemania +49</option>
                 <option value="+502 Guatemala">Guatemala +502</option>
                 <option value="+504 Honduras">Honduras +504</option>
+                <option value="+44 Inglaterra">Inglaterra +44</option>
+                <option value="+353 Irlanda">Irlanda +353</option>
+                <option value="+81 Japón">Japón +81</option>
                 <option value="+52 México">México +52</option>
                 <option value="+505 Nicaragua">Nicaragua +505</option>
                 <option value="+507 Panamá">Panamá +507</option>
@@ -419,6 +430,15 @@
 
     form.addEventListener('submit', async function(e){
       e.preventDefault();
+
+      const cursosMarcados = Array.from(document.querySelectorAll('input[name="curso"]:checked')).map(el => el.value);
+      if(cursosMarcados.length === 0){
+        statusMsg.textContent = "Elegí al menos una certificación/instructorado.";
+        statusMsg.className = "status error";
+        document.querySelector('.course-options').scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
       btn.disabled = true;
       btn.textContent = "Enviando...";
       statusMsg.className = "status";
@@ -426,6 +446,7 @@
       try{
         const formData = new FormData(form);
         const jsonData = Object.fromEntries(formData.entries());
+        jsonData.curso = cursosMarcados.join(", ");
 
         const response = await fetch(ENVIAR_ENDPOINT, {
           method: "POST",
