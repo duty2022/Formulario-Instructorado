@@ -398,6 +398,25 @@
             <textarea name="experiencia" placeholder="Cuenta si diste clases, hiciste cursos, cuánto tiempo llevas entrenando, etc." required></textarea>
           </div>
 
+          <div class="field">
+            <label>¿Tienes cupón de descuento? <span class="req">*</span></label>
+            <div class="course-options" style="flex-direction: row;">
+              <label class="course-option" style="flex:1; justify-content: center;">
+                <input type="radio" name="tiene_cupon" value="No" required>
+                <span>No</span>
+              </label>
+              <label class="course-option" style="flex:1; justify-content: center;">
+                <input type="radio" name="tiene_cupon" value="Sí" required>
+                <span>Sí</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field" id="campo-cupon" style="display:none;">
+            <label>Número de cupón <span class="req">*</span></label>
+            <input type="text" name="numero_cupon" placeholder="Ingresa el número de tu cupón">
+          </div>
+
           <div class="hint" style="margin: -8px 0 20px;">Todos los campos son obligatorios.</div>
 
           <button type="submit" id="submit-btn">Enviar inscripción</button>
@@ -427,6 +446,22 @@
     const confirmationScreen = document.getElementById('confirmation-screen');
 
     const ENVIAR_ENDPOINT = "/api/enviar-inscripcion";
+
+    const campoCupon = document.getElementById('campo-cupon');
+    const inputNumeroCupon = document.querySelector('input[name="numero_cupon"]');
+
+    document.querySelectorAll('input[name="tiene_cupon"]').forEach(function(radio){
+      radio.addEventListener('change', function(){
+        if(this.value === "Sí"){
+          campoCupon.style.display = "block";
+          inputNumeroCupon.required = true;
+        } else {
+          campoCupon.style.display = "none";
+          inputNumeroCupon.required = false;
+          inputNumeroCupon.value = "";
+        }
+      });
+    });
 
     form.addEventListener('submit', async function(e){
       e.preventDefault();
@@ -473,6 +508,9 @@
       btn.disabled = false;
     });
   </script>
+
+</body>
+</html>
 
 </body>
 </html>
