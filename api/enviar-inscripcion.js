@@ -21,12 +21,18 @@ module.exports = async (req, res) => {
     whatsapp_pais,
     whatsapp_numero,
     email,
-    experiencia
+    experiencia,
+    tiene_cupon,
+    numero_cupon
   } = req.body || {};
 
-  if (!nombre || !apellido || !documento || !curso || !ciudad || !whatsapp_pais || !whatsapp_numero || !email || !experiencia) {
+  if (!nombre || !apellido || !documento || !curso || !ciudad || !whatsapp_pais || !whatsapp_numero || !email || !experiencia || !tiene_cupon) {
     return res.status(400).json({ success: false, error: "Faltan campos obligatorios" });
   }
+
+  const lineaCupon = tiene_cupon === "Sí"
+    ? `<p><strong>Cupón de descuento:</strong> Sí — Nº ${numero_cupon || "(no indicado)"}</p>`
+    : `<p><strong>Cupón de descuento:</strong> No</p>`;
 
   try {
     const respuesta = await fetch("https://api.resend.com/emails", {
@@ -48,6 +54,7 @@ module.exports = async (req, res) => {
           <p><strong>WhatsApp:</strong> ${whatsapp_pais} ${whatsapp_numero}</p>
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Experiencia previa en baile o fitness:</strong><br>${experiencia}</p>
+          ${lineaCupon}
         `
       })
     });
